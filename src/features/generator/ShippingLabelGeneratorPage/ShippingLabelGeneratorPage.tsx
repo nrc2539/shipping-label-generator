@@ -1,24 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import dynamic from "next/dynamic";
 
 import { InputField } from "@/components/form/InputField";
-import { DropdownField } from "@/components/form/DropdownField";
-import type { ShippingLabelGeneratorPageProps } from './interface';
-import type { SelectType } from "@/interfaces/SelectType";
+import type { ShippingLabelGeneratorPageProps, ShippingLabelFormType } from './interface';
 import TextAreaField from "@/components/form/TextAreaField";
-
-const layoutOptions: SelectType[] = [
-  { label: "Full A4", value: "full" },
-  { label: "Quarter A4", value: "quarter" },
-];
-
-const ShippingLabelPreview = dynamic(
-  () => import("@/features/generator/ShippingLabelGeneratorPage/components/ShippingLabelPreview"),
-  { ssr: false },
-);
+import PreviewPanel from "./components/PreviewPanel";
 
 const validationSchema = yup.object({
   senderName: yup.string().trim().required("Sender name is required"),
@@ -29,11 +18,15 @@ const validationSchema = yup.object({
   recipientAddress: yup.string().trim().required("Recipient address is required"),
   recipientPhone: yup.string().trim().required("Recipient phone is required"),
   recipientPostalCode: yup.string().trim().required("Recipient postal code is required"),
-  labelLayout: yup.string().oneOf(["full", "quarter"]).required("Please select a layout"),
-  copies: yup.number().min(1).max(12).required(),
 });
 
-function ShippingLabelGeneratorPage({ initialValues, handleSubmit }: ShippingLabelGeneratorPageProps) {
+function ShippingLabelGeneratorPage({ initialValues }: ShippingLabelGeneratorPageProps) {
+  const [submittedData, setSubmittedData] = useState<ShippingLabelFormType | null>(null);
+
+  function handleFormSubmit(values: ShippingLabelFormType) {
+    setSubmittedData(values);
+  }
+
   return (
     <div className="p-5 min-h-screen bg-zinc-50 font-sans dark:bg-black">
       <h1 className="text-2xl text-center font-bold text-gray-800 dark:text-white mb-8">
@@ -43,13 +36,12 @@ function ShippingLabelGeneratorPage({ initialValues, handleSubmit }: ShippingLab
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
         validateOnBlur
         validateOnChange={false}
       >
-        {({ isValid, dirty, values }) => (
-
-          < div className="flex flex-col md:flex-row gap-6 items-start">
+        {({ isValid, dirty }) => (
+          <div className="flex flex-col md:flex-row gap-6 items-start">
             <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 p-6 w-full md:max-w-lg">
               <Form className="space-y-6">
 
@@ -109,45 +101,21 @@ function ShippingLabelGeneratorPage({ initialValues, handleSubmit }: ShippingLab
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-zinc-700 pt-6 flex gap-4">
-                  <div className="flex-1">
-                    <DropdownField
-                      clearable={false}
-                      name="labelLayout"
-                      label="Layout"
-                      options={layoutOptions}
-                      placeholder="Select layout"
-                    />
-                  </div>
-                  <div className="w-24">
-                    <InputField
-                      name="copies"
-                      label="Copies"
-                      type="number"
-                      min={1}
-                      max={12}
-                    />
-                  </div>
-                </div>
-
                 <button
                   type="submit"
                   disabled={!(isValid && dirty)}
-                  className="w-full py-2.5 px-4 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="w-full py-2.5 px-4 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
-                  Generate Label
+                  Preview Label
                 </button>
               </Form>
             </div>
 
-            <div className="w-full bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden aspect-[210/297]">
-              <ShippingLabelPreview data={values} layout={values.labelLayout} copies={values.copies} />
-            </div>
+            <PreviewPanel data={submittedData} />
           </div>
-        )
-        }
-      </Formik >
-    </div >
+        )}
+      </Formik>
+    </div>
   );
 }
 

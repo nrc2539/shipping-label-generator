@@ -1,6 +1,5 @@
 export interface ShippingLabelGeneratorPageProps {
     initialValues: ShippingLabelFormType;
-    handleSubmit: (values: ShippingLabelFormType) => void;
 }
 
 export type ShippingLabelFormType = {
@@ -12,6 +11,4 @@ export type ShippingLabelFormType = {
     recipientAddress: string;
     recipientPhone: string;
     recipientPostalCode: string;
-    labelLayout: "full" | "quarter";
-    copies: number;
 }

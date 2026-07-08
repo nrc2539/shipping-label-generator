@@ -3,9 +3,6 @@ import { ShippingLabelFormType, ShippingLabelGeneratorPageProps } from "./interf
 export function withShippingGeneratorPage(Component: React.FC<ShippingLabelGeneratorPageProps>) {
     function WithShippingGeneratorPage() {
 
-        function handleSubmit(values: ShippingLabelFormType) {
-            console.log("Form submitted with values:", values);
-        }
         const componentProps: ShippingLabelGeneratorPageProps = {
             initialValues: {
                 senderName: "",
@@ -16,10 +13,7 @@ export function withShippingGeneratorPage(Component: React.FC<ShippingLabelGener
                 recipientAddress: "",
                 recipientPhone: "",
                 recipientPostalCode: "",
-                labelLayout: "full" as const,
-                copies: 1,
             },
-            handleSubmit
         }
         return <Component {...componentProps} />;
     }

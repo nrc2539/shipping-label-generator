@@ -18,6 +18,7 @@ export interface WithDropdownProps {
   allowedPlacements?: Placement[];
   searchable?: boolean;
   searchPlaceholder?: string;
+  showError?: boolean;
   onSelect: (value: string) => void;
   onClear?: () => void;
   handleOpenChange?: (value: boolean) => void;

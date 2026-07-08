@@ -28,6 +28,7 @@ export function Dropdown({
   searchable,
   searchPlaceholder,
   text,
+  showError,
   handleTextChange,
   handleSelect,
   getReferenceProps,
@@ -127,9 +128,11 @@ export function Dropdown({
         </ul>
       )}
 
-      <div className={cn({ invisible: !errorMessage })}>
-        <ErrorMessage text={errorMessage || ""} />
-      </div>
+      {showError && (
+        <div className={cn({ invisible: !errorMessage })}>
+          <ErrorMessage text={errorMessage || ""} />
+        </div>
+      )}
     </div>
   );
 }
