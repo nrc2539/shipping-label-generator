@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/libs/utils";
 
 const sarabun = Sarabun({
   variable: "--font-sarabun",
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sarabun.variable} h-full antialiased`}
+      className={cn('h-full antialiased', sarabun.variable)}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -15,6 +15,7 @@ export interface WithDropdownFieldProps {
   allowedPlacements?: Placement[];
   searchable?: boolean;
   searchPlaceholder?: string;
+  clearable?: boolean;
   onSelect?: (value: string) => void;
   onClear?: () => void;
 }

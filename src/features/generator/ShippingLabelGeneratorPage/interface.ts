@@ -12,4 +12,6 @@ export type ShippingLabelFormType = {
     recipientAddress: string;
     recipientPhone: string;
     recipientPostalCode: string;
+    labelLayout: "full" | "quarter";
+    copies: number;
 }

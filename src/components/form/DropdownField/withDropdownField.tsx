@@ -9,6 +9,7 @@ export function withDropdownField(Component: React.FC<WithDropdownProps>) {
     name,
     onSelect,
     onClear,
+    clearable = true,
     ...props
   }: WithDropdownFieldProps) {
     const [field, { touched, error }, { setValue, setTouched }] =
@@ -39,7 +40,7 @@ export function withDropdownField(Component: React.FC<WithDropdownProps>) {
       ...field,
       errorMessage: touched && !!error ? error : "",
       onSelect: handleSelect,
-      onClear: handleClear,
+      onClear: clearable ? handleClear : undefined,
       handleOpenChange,
     };
 

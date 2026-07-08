@@ -15,7 +15,9 @@ export function withShippingGeneratorPage(Component: React.FC<ShippingLabelGener
                 recipientName: "",
                 recipientAddress: "",
                 recipientPhone: "",
-                recipientPostalCode: ""
+                recipientPostalCode: "",
+                labelLayout: "full" as const,
+                copies: 1,
             },
             handleSubmit
         }
