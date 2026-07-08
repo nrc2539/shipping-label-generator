@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
+import { IconBrandGithubFilled } from "@tabler/icons-react";
 
 import { InputField } from "@/components/form/InputField";
-import type { ShippingLabelGeneratorPageProps, ShippingLabelFormType } from './interface';
 import TextAreaField from "@/components/form/TextAreaField";
+import type { ShippingLabelGeneratorPageProps, ShippingLabelFormType } from './interface';
 import PreviewPanel from "./components/PreviewPanel";
 
 const validationSchema = yup.object({
@@ -29,9 +30,25 @@ function ShippingLabelGeneratorPage({ initialValues }: ShippingLabelGeneratorPag
 
   return (
     <div className="p-5 min-h-screen bg-zinc-50 font-sans dark:bg-black">
-      <h1 className="text-2xl text-center font-bold text-gray-800 dark:text-white mb-8">
-        สร้างใบปะหน้าพัสดุ (Shipping Label Generator)
-      </h1>
+      <div className="relative">
+        <h1 className="text-2xl text-center font-bold text-gray-800 dark:text-white mb-8">
+          สร้างใบปะหน้าพัสดุ (Shipping Label Generator)
+        </h1>
+
+        <div className="hidden xl:flex absolute top-0 right-0 items-center gap-2">
+          <p className="text-center text-sm text-gray-500">
+            Made with ❤️ by NRC Dev | 2026
+          </p>
+          <a
+            href="https://github.com/nrc2539/shipping-label-generator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className=" text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-white transition"
+          >
+            <IconBrandGithubFilled className="size-6" />
+          </a>
+        </div>
+      </div>
 
       <Formik
         initialValues={initialValues}
