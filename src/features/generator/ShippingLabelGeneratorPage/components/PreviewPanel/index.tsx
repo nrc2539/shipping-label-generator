@@ -76,8 +76,8 @@ export default function PreviewPanel({ data }: PreviewPanelProps) {
 
   if (!data) {
     return (
-      <div className="w-full bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 p-6 flex items-center justify-center aspect-[210/297]">
-        <p className="text-gray-400 dark:text-zinc-500 text-center text-sm">
+      <div className="w-full bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 p-6 flex justify-center aspect-[210/297]">
+        <p className="mt-10 text-gray-400 dark:text-zinc-500 text-center text-sm">
           Fill in the form and click <strong>Preview Label</strong>
         </p>
       </div>
