@@ -2,7 +2,7 @@
 
 import { Document, Page, View, Text, StyleSheet, Font } from "@react-pdf/renderer";
 
-import type { ShippingLabelFormType } from "../../interface";
+import type { RecipientType } from "../../interface";
 import { ShippingLabelDocumentProps } from "./interface";
 
 
@@ -129,12 +129,14 @@ const quarterStyles = StyleSheet.create({
 
 function LabelContent({
   styles,
-  data,
+  sender,
+  recipient,
   layout,
 }: {
   layout: "full" | "quarter";
   styles: typeof fullStyles | typeof quarterStyles;
-  data: ShippingLabelFormType;
+  sender: { senderName: string; senderAddress: string; senderPhone: string; senderPostalCode: string };
+  recipient: RecipientType;
 }) {
   return (
     <View style={{ flex: 1 }}>
@@ -142,21 +144,21 @@ function LabelContent({
         <Text style={styles.sectionTitle}>ผู้ส่ง (Sender)</Text>
         <View style={styles.row}>
           <Text style={styles.label}>ชื่อ (Name) :</Text>
-          <Text style={styles.value}>{data.senderName || "-"}</Text>
+          <Text style={styles.value}>{sender.senderName || "-"}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>ที่อยู่ (Address) :</Text>
           <View style={styles.addressContainer}>
-            <Text style={styles.value}>{data.senderAddress || "-"}</Text>
+            <Text style={styles.value}>{sender.senderAddress || "-"}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>เบอร์โทร (Tel.) :</Text>
-          <Text style={styles.value}>{data.senderPhone || "-"}</Text>
+          <Text style={styles.value}>{sender.senderPhone || "-"}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>รหัสไปรษณีย์ (Postal Code) :</Text>
-          <Text style={styles.value}>{data.senderPostalCode || "-"}</Text>
+          <Text style={styles.value}>{sender.senderPostalCode || "-"}</Text>
         </View>
       </View>
 
@@ -165,21 +167,21 @@ function LabelContent({
         <Text style={styles.sectionTitle}>ผู้รับ (Recipient)</Text>
         <View style={styles.row}>
           <Text style={styles.label}>ชื่อ (Name) :</Text>
-          <Text style={styles.value}>{data.recipientName || "-"}</Text>
+          <Text style={styles.value}>{recipient.name || "-"}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>ที่อยู่ (Address) :</Text>
           <View style={styles.addressContainer}>
-            <Text style={styles.value}>{data.recipientAddress || "-"}</Text>
+            <Text style={styles.value}>{recipient.address || "-"}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>เบอร์โทร (Tel.) :</Text>
-          <Text style={styles.value}>{data.recipientPhone || "-"}</Text>
+          <Text style={styles.value}>{recipient.phone || "-"}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>รหัสไปรษณีย์ (Postal Code) :</Text>
-          <Text style={styles.value}>{data.recipientPostalCode || "-"}</Text>
+          <Text style={styles.value}>{recipient.postalCode || "-"}</Text>
         </View>
       </View>
     </View>
@@ -191,10 +193,21 @@ export default function ShippingLabelDocument({
   layout = "full",
   copies = 1,
 }: ShippingLabelDocumentProps) {
+  const sender = {
+    senderName: data.senderName,
+    senderAddress: data.senderAddress,
+    senderPhone: data.senderPhone,
+    senderPostalCode: data.senderPostalCode,
+  };
+
+  const labels = data.recipients.flatMap((recipient) =>
+    Array.from({ length: copies }, () => recipient)
+  );
+
   return (
     <Document>
       <Page size="A4" style={{ fontFamily: "Sarabun" }}>
-        {Array.from({ length: copies }).map((_, index) => {
+        {labels.map((recipient, index) => {
           if (layout === "quarter") {
             const sectionIndex = (index % 4) + 1;
             const pos = sectionPosition[sectionIndex];
@@ -208,14 +221,14 @@ export default function ShippingLabelDocument({
                 ]}
               >
                 <View style={quarterStyles.labelWrapper}>
-                  <LabelContent styles={quarterStyles} data={data} layout={layout} />
+                  <LabelContent styles={quarterStyles} sender={sender} recipient={recipient} layout={layout} />
                 </View>
               </View>
             );
           }
           return (
             <View key={index} style={fullStyles.wrapper} break={index > 0}>
-              <LabelContent styles={fullStyles} data={data} layout={layout} />
+              <LabelContent styles={fullStyles} sender={sender} recipient={recipient} layout={layout} />
             </View>
           );
         })}

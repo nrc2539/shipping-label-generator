@@ -1,4 +1,4 @@
-import { ShippingLabelFormType, ShippingLabelGeneratorPageProps } from "./interface";
+import { ShippingLabelGeneratorPageProps } from "./interface";
 
 export function withShippingGeneratorPage(Component: React.FC<ShippingLabelGeneratorPageProps>) {
     function WithShippingGeneratorPage() {
@@ -9,10 +9,9 @@ export function withShippingGeneratorPage(Component: React.FC<ShippingLabelGener
                 senderAddress: "",
                 senderPhone: "",
                 senderPostalCode: "",
-                recipientName: "",
-                recipientAddress: "",
-                recipientPhone: "",
-                recipientPostalCode: "",
+                recipients: [
+                    { name: "", address: "", phone: "", postalCode: "" },
+                ],
             },
         }
         return <Component {...componentProps} />;
