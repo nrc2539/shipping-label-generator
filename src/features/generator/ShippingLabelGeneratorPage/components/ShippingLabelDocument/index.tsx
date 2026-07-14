@@ -4,6 +4,7 @@ import { Document, Page, View, Text, StyleSheet, Font } from "@react-pdf/rendere
 
 import type { RecipientType } from "../../interface";
 import { ShippingLabelDocumentProps } from "./interface";
+import { LabelLayout } from "../ShippingLabelPreview/interface";
 
 
 
@@ -28,9 +29,15 @@ const A4_WIDTH = 210;
 const A4_HEIGHT = 297;
 const DEFAULT_COLOR = "#111";
 const FULL_LAYOUT_SPACING = 20;
+const HALF_LAYOUT_SPACING = 14;
 const QUARTER_LAYOUT_SPACING = 8;
 
-const sectionPosition: Record<number, { top: number; left: number }> = {
+const halfSectionPosition: Record<number, { top: number; left: number }> = {
+  1: { top: 0, left: 0 },
+  2: { top: A4_HEIGHT / 2, left: 0 },
+};
+
+const quarterSectionPosition: Record<number, { top: number; left: number }> = {
   1: { top: 0, left: 0 },
   2: { top: 0, left: A4_WIDTH / 2 },
   3: { top: A4_HEIGHT / 2, left: 0 },
@@ -73,6 +80,56 @@ const fullStyles = StyleSheet.create({
     borderColor: DEFAULT_COLOR,
     padding: FULL_LAYOUT_SPACING,
     margin: 10,
+    flex: 1,
+  },
+});
+
+const halfStyles = StyleSheet.create({
+  labelContainer: {
+    position: "absolute",
+    width: "100%",
+    height: "50%",
+    padding: HALF_LAYOUT_SPACING,
+    fontFamily: "Sarabun",
+  },
+  labelWrapper: {
+    width: "100%",
+    height: "100%",
+    borderWidth: 1.5,
+    borderColor: DEFAULT_COLOR,
+    padding: HALF_LAYOUT_SPACING,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    marginBottom: HALF_LAYOUT_SPACING,
+    color: DEFAULT_COLOR,
+    borderBottomWidth: 0.75,
+    borderBottomColor: DEFAULT_COLOR,
+    paddingBottom: HALF_LAYOUT_SPACING,
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    marginBottom: HALF_LAYOUT_SPACING,
+  },
+  label: {
+    fontWeight: 700,
+    color: DEFAULT_COLOR,
+    fontSize: 11,
+    marginRight: 8,
+  },
+  value: {
+    fontWeight: 400,
+    flex: 1,
+    fontSize: 11,
+    breakWord: "break-word",
+  },
+  addressContainer: {
+    flex: 1,
+    minHeight: 50,
+  },
+  halfSection: {
     flex: 1,
   },
 });
@@ -133,8 +190,8 @@ function LabelContent({
   recipient,
   layout,
 }: {
-  layout: "full" | "quarter";
-  styles: typeof fullStyles | typeof quarterStyles;
+  layout: LabelLayout;
+  styles: typeof fullStyles | typeof halfStyles | typeof quarterStyles;
   sender: { senderName: string; senderAddress: string; senderPhone: string; senderPostalCode: string };
   recipient: RecipientType;
 }) {
@@ -163,7 +220,7 @@ function LabelContent({
       </View>
 
       <View style={styles.halfSection}>
-        <View style={{ borderTopWidth: layout === "full" ? 1 : 0.5, borderTopColor: DEFAULT_COLOR, paddingTop: layout === "full" ? FULL_LAYOUT_SPACING : QUARTER_LAYOUT_SPACING, marginLeft: layout === "full" ? -FULL_LAYOUT_SPACING : -QUARTER_LAYOUT_SPACING, marginRight: layout === "full" ? -FULL_LAYOUT_SPACING : -QUARTER_LAYOUT_SPACING }} />
+        <View style={{ borderTopWidth: layout === "full" ? 1 : layout === "half" ? 0.75 : 0.5, borderTopColor: DEFAULT_COLOR, paddingTop: layout === "full" ? FULL_LAYOUT_SPACING : layout === "half" ? HALF_LAYOUT_SPACING : QUARTER_LAYOUT_SPACING, marginLeft: layout === "full" ? -FULL_LAYOUT_SPACING : layout === "half" ? -HALF_LAYOUT_SPACING : -QUARTER_LAYOUT_SPACING, marginRight: layout === "full" ? -FULL_LAYOUT_SPACING : layout === "half" ? -HALF_LAYOUT_SPACING : -QUARTER_LAYOUT_SPACING }} />
         <Text style={styles.sectionTitle}>ผู้รับ (Recipient)</Text>
         <View style={styles.row}>
           <Text style={styles.label}>ชื่อ (Name) :</Text>
@@ -208,9 +265,27 @@ export default function ShippingLabelDocument({
     <Document>
       <Page size="A4" style={{ fontFamily: "Sarabun" }}>
         {labels.map((recipient, index) => {
+          if (layout === "half") {
+            const sectionIndex = (index % 2) + 1;
+            const pos = halfSectionPosition[sectionIndex];
+            return (
+              <View
+                break={index > 0 && index % 2 === 0}
+                key={index}
+                style={[
+                  halfStyles.labelContainer,
+                  { top: `${pos.top}mm`, left: `${pos.left}mm` },
+                ]}
+              >
+                <View style={halfStyles.labelWrapper}>
+                  <LabelContent styles={halfStyles} sender={sender} recipient={recipient} layout={layout} />
+                </View>
+              </View>
+            );
+          }
           if (layout === "quarter") {
             const sectionIndex = (index % 4) + 1;
-            const pos = sectionPosition[sectionIndex];
+            const pos = quarterSectionPosition[sectionIndex];
             return (
               <View
                 break={index > 0 && index % 4 === 0}

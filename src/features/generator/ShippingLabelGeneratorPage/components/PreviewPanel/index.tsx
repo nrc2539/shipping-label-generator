@@ -8,16 +8,18 @@ import Input from "@/components/Input";
 import type { SelectType } from "@/interfaces/SelectType";
 import { PreviewPanelProps } from "./interface";
 import ShippingLabelDocument from "../ShippingLabelDocument";
+import { LabelLayout } from "../ShippingLabelPreview/interface";
 
 const layoutOptions: SelectType[] = [
   { label: "Full A4", value: "full" },
+  { label: "Half A4", value: "half" },
   { label: "Quarter A4", value: "quarter" },
 ];
 
 
 
 export default function PreviewPanel({ data }: PreviewPanelProps) {
-  const [layout, setLayout] = useState<"full" | "quarter">("full");
+  const [layout, setLayout] = useState<LabelLayout>("full");
   const [copies, setCopies] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export default function PreviewPanel({ data }: PreviewPanelProps) {
             showError={false}
             value={layout}
             options={layoutOptions}
-            onSelect={(v) => setLayout(v as "full" | "quarter")}
+            onSelect={(v) => setLayout(v as LabelLayout)}
             label="Layout"
             placeholder="Select layout"
           />

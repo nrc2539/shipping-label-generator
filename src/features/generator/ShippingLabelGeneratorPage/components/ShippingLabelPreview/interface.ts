@@ -1,6 +1,6 @@
 import type { ShippingLabelFormType } from "@/features/generator/ShippingLabelGeneratorPage/interface";
 
-export type LabelLayout = "full" | "quarter";
+export type LabelLayout = "full" | "half" | "quarter";
 
 export interface ShippingLabelPreviewProps {
   data: ShippingLabelFormType;
