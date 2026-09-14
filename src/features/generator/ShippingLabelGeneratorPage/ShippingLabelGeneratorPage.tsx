@@ -19,7 +19,7 @@ const recipientSchema = yup.object({
 
 const validationSchema = yup.object({
   senderName: yup.string().trim().required("Sender name is required"),
-  senderAddress: yup.string().trim().required("Sender address is required"),
+  senderAddress: yup.string().trim(),
   senderPhone: yup.string().trim().required("Sender phone is required"),
   senderPostalCode: yup.string().trim().required("Sender postal code is required"),
   recipients: yup.array().of(recipientSchema).min(1, "At least one recipient is required").required(),
@@ -106,51 +106,51 @@ function ShippingLabelGeneratorPage({ initialValues }: ShippingLabelGeneratorPag
                             <div
                               className="border border-gray-200 dark:border-zinc-700 rounded-lg p-4 relative"
                             >
-                            <div className="flex items-center justify-between mb-3">
-                              <h3 className="text-sm font-medium text-gray-700 dark:text-zinc-300">
-                                ผู้รับที่ {index + 1} (Recipient {index + 1})
-                              </h3>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => push({ ...values.recipients[index] })}
-                                  className="text-gray-400 hover:text-teal-600 transition cursor-pointer"
-                                >
-                                  <IconCopy className="size-4" />
-                                </button>
-                                {values.recipients.length > 1 && (
+                              <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                                  ผู้รับที่ {index + 1} (Recipient {index + 1})
+                                </h3>
+                                <div className="flex items-center gap-2">
                                   <button
                                     type="button"
-                                    onClick={() => remove(index)}
-                                    className="text-red-500 hover:text-red-700 transition cursor-pointer"
+                                    onClick={() => push({ ...values.recipients[index] })}
+                                    className="text-gray-400 hover:text-teal-600 transition cursor-pointer"
                                   >
-                                    <IconTrash className="size-4" />
+                                    <IconCopy className="size-4" />
                                   </button>
-                                )}
+                                  {values.recipients.length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                      className="text-red-500 hover:text-red-700 transition cursor-pointer"
+                                    >
+                                      <IconTrash className="size-4" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                            <div className="space-y-0.5">
-                              <InputField
-                                name={`recipients[${index}].name`}
-                                label="ชื่อผู้รับ (Recipient Name)"
-                                placeholder="Enter recipient name"
-                              />
-                              <TextAreaField
-                                name={`recipients[${index}].address`}
-                                label="ที่อยู่ผู้รับ (Recipient Address)"
-                                placeholder="Enter recipient address"
-                              />
-                              <InputField
-                                name={`recipients[${index}].phone`}
-                                label="เบอร์โทรผู้รับ (Recipient Phone)"
-                                placeholder="Enter recipient phone"
-                              />
-                              <InputField
-                                name={`recipients[${index}].postalCode`}
-                                label="รหัสไปรษณีย์ผู้รับ (Recipient Postal Code)"
-                                placeholder="Enter recipient postal code"
-                              />
-                            </div>
+                              <div className="space-y-0.5">
+                                <InputField
+                                  name={`recipients[${index}].name`}
+                                  label="ชื่อผู้รับ (Recipient Name)"
+                                  placeholder="Enter recipient name"
+                                />
+                                <TextAreaField
+                                  name={`recipients[${index}].address`}
+                                  label="ที่อยู่ผู้รับ (Recipient Address)"
+                                  placeholder="Enter recipient address"
+                                />
+                                <InputField
+                                  name={`recipients[${index}].phone`}
+                                  label="เบอร์โทรผู้รับ (Recipient Phone)"
+                                  placeholder="Enter recipient phone"
+                                />
+                                <InputField
+                                  name={`recipients[${index}].postalCode`}
+                                  label="รหัสไปรษณีย์ผู้รับ (Recipient Postal Code)"
+                                  placeholder="Enter recipient postal code"
+                                />
+                              </div>
                             </div>
                             {index < values.recipients.length - 1 && (
                               <div className="border-t border-dashed border-gray-300 dark:border-zinc-600 my-4" />
